@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Booking {
 
     @Id
@@ -20,23 +21,39 @@ public class Booking {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(updatable = false, nullable = false)
+    @Column(name = "booking_id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
     private UUID bookingId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // Who booked the trip
+    private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id", nullable = false)
-    private Trip trip;  // Which trip is booked
+    private Trip trip;
 
-    private LocalDateTime bookingTime;
+    @Column(name = "booking_time", nullable = false)
+    private LocalDateTime bookingTime = LocalDateTime.now();
 
     @ElementCollection
-    private List<String> seatsBooked;  // Seat numbers booked
+    @CollectionTable(
+            name = "booking_seats_booked",
+            joinColumns = @JoinColumn(name = "booking_id")
+    )
+    @Column(name = "seat_number", nullable = false)
+    private List<String> seatsBooked;
 
+    @Column(name = "total_price", nullable = false)
     private double totalPrice;
 
-    private String status;  // e.g., "CONFIRMED", "CANCELLED", "PENDING"
+    @Column(name = "status", nullable = false)
+    private String status; // e.g., CONFIRMED, CANCELLED, PENDING
+
+    // Optional: Ensure UUID is generated even if someone manually sets bookingId to null
+    @PrePersist
+    public void ensureId() {
+        if (this.bookingId == null) {
+            this.bookingId = UUID.randomUUID();
+        }
+    }
 }

@@ -1,49 +1,22 @@
 package com.paxon.busbooking.services;
 
+import com.paxon.busbooking.dto.BookingRequest;
 import com.paxon.busbooking.models.Booking;
-import com.paxon.busbooking.repositories.BookingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-@Service
-public class BookingService {
+public interface BookingService {
+    List<Booking> getAllBookings();
+    Optional<Booking> getBookingById(String id);
 
-    private final BookingRepository bookingRepository;
+    // Updated to accept BookingRequest instead of Booking entity
+    Booking createBooking(BookingRequest bookingRequest);
 
-    @Autowired
-    public BookingService(BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
-    }
+    // ✅ Update existing booking
+    Booking updateBooking(String id, Booking bookingDetails);
 
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
-    }
-
-    public Optional<Booking> getBookingById(String id) {
-        UUID uuid = UUID.fromString(id); // ✅ Convert String to UUID
-        return bookingRepository.findById(uuid);
-    }
-
-    public Booking createBooking(Booking booking) {
-        return bookingRepository.save(booking);
-    }
-
-    public void deleteBooking(String id) {
-        UUID uuid = UUID.fromString(id); // ✅ Convert String to UUID
-        bookingRepository.deleteById(uuid);
-    }
-
-    public List<Booking> getBookingsByUser(String userId) {
-        UUID uuid = UUID.fromString(userId); // ✅ Convert String to UUID
-        return bookingRepository.findByUserUserId(uuid);
-    }
-
-    public List<Booking> getBookingsByTrip(String tripId) {
-        UUID uuid = UUID.fromString(tripId); // ✅ Convert String to UUID
-        return bookingRepository.findByTripTripId(uuid);
-    }
+    void deleteBooking(String id);
+    List<Booking> getBookingsByUser(String userId);
+    List<Booking> getBookingsByTrip(String tripId);
 }
