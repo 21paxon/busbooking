@@ -21,7 +21,7 @@ public class Booking {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "booking_id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    @Column(name = "booking_id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
     private UUID bookingId;
 
     @ManyToOne(fetch = FetchType.LAZY)

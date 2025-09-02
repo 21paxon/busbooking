@@ -32,6 +32,12 @@ export interface BookingRequest {
   totalPrice: number;
 }
 
+export interface BookingStats {
+  totalBookings: number;
+  confirmedBookings: number;
+  cancelledBookings: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -40,9 +46,10 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all bookings
-  getAllBookings(): Observable<Booking[]> {
-    return this.http.get<Booking[]>(this.apiUrl).pipe(
+  // Get all bookings (admin only)
+  getAllBookings(adminUserId: string): Observable<Booking[]> {
+    const url = `${this.apiUrl}?adminUserId=${encodeURIComponent(adminUserId)}`;
+    return this.http.get<Booking[]>(url).pipe(
       catchError(error => {
         console.error('Error fetching bookings:', error);
         return of(this.getSampleBookings());
@@ -50,9 +57,10 @@ export class BookingService {
     );
   }
 
-  // Get booking by ID
-  getBookingById(id: string): Observable<Booking | undefined> {
-    return this.http.get<Booking>(`${this.apiUrl}/${id}`).pipe(
+  // Get booking by ID (requires userId)
+  getBookingById(id: string, userId: string): Observable<Booking | undefined> {
+    const url = `${this.apiUrl}/${encodeURIComponent(id)}?userId=${encodeURIComponent(userId)}`;
+    return this.http.get<Booking>(url).pipe(
       catchError(error => {
         console.error(`Error fetching booking ${id}:`, error);
         return of(undefined);
@@ -65,14 +73,16 @@ export class BookingService {
     return this.http.post<Booking>(this.apiUrl, bookingRequest);
   }
 
-  // Delete booking
-  deleteBooking(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  // Delete booking (requires userId)
+  deleteBooking(id: string, userId: string): Observable<void> {
+    const url = `${this.apiUrl}/${encodeURIComponent(id)}?userId=${encodeURIComponent(userId)}`;
+    return this.http.delete<void>(url);
   }
 
-  // Get bookings by user
-  getBookingsByUser(userId: string): Observable<Booking[]> {
-    return this.http.get<Booking[]>(`${this.apiUrl}/user/${userId}`).pipe(
+  // Get bookings by user (requires requestingUserId)
+  getBookingsByUser(userId: string, requestingUserId: string): Observable<Booking[]> {
+    const url = `${this.apiUrl}/user/${encodeURIComponent(userId)}?requestingUserId=${encodeURIComponent(requestingUserId)}`;
+    return this.http.get<Booking[]>(url).pipe(
       catchError(error => {
         console.error(`Error fetching bookings for user ${userId}:`, error);
         return of(this.getSampleBookings().filter(b => b.user.userId === userId));
@@ -80,9 +90,10 @@ export class BookingService {
     );
   }
 
-  // Get bookings by trip
-  getBookingsByTrip(tripId: string): Observable<Booking[]> {
-    return this.http.get<Booking[]>(`${this.apiUrl}/trip/${tripId}`).pipe(
+  // Get bookings by trip (admin only)
+  getBookingsByTrip(tripId: string, adminUserId: string): Observable<Booking[]> {
+    const url = `${this.apiUrl}/trip/${encodeURIComponent(tripId)}?adminUserId=${encodeURIComponent(adminUserId)}`;
+    return this.http.get<Booking[]>(url).pipe(
       catchError(error => {
         console.error(`Error fetching bookings for trip ${tripId}:`, error);
         return of(this.getSampleBookings().filter(b => b.trip.tripId === tripId));
@@ -91,13 +102,19 @@ export class BookingService {
   }
 
   // Alias for getBookingsByUser (for backward compatibility)
-  byUser(userId: string): Observable<Booking[]> {
-    return this.getBookingsByUser(userId);
+  byUser(userId: string, requestingUserId: string): Observable<Booking[]> {
+    return this.getBookingsByUser(userId, requestingUserId);
   }
 
   // Alias for getBookingsByTrip (for backward compatibility)
-  byTrip(tripId: string): Observable<Booking[]> {
-    return this.getBookingsByTrip(tripId);
+  byTrip(tripId: string, adminUserId: string): Observable<Booking[]> {
+    return this.getBookingsByTrip(tripId, adminUserId);
+  }
+
+  // Get booking statistics (admin only)
+  getStats(adminUserId: string): Observable<BookingStats> {
+    const url = `${this.apiUrl}/stats?adminUserId=${encodeURIComponent(adminUserId)}`;
+    return this.http.get<BookingStats>(url);
   }
 
   // Sample data for development/testing

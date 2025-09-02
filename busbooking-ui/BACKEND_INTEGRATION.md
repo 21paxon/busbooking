@@ -166,3 +166,11 @@ When deploying to production:
 - [Angular HTTP Client](https://angular.io/guide/http)
 - [Spring Boot REST Controllers](https://spring.io/guides/gs/rest-service/)
 - [CORS Configuration](https://spring.io/guides/gs/rest-service-cors/)
+
+
+
+
+
+
+
+

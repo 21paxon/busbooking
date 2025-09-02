@@ -1,0 +1,22 @@
+<div class="trip-details-container" *ngIf="trip; else noTrip">
+  <h2>{{ trip.origin }} → {{ trip.destination }}</h2>
+
+  <div class="trip-info">
+    <p><strong>Departure:</strong> {{ formatTime(trip.departureTime) }} ({{ formatDate(trip.departureTime) }})</p>
+    <p><strong>Arrival:</strong> {{ formatTime(trip.arrivalTime) }} ({{ formatDate(trip.arrivalTime) }})</p>
+    <p><strong>Duration:</strong> {{ getDuration(trip.departureTime, trip.arrivalTime) }}</p>
+    <p><strong>Bus:</strong> {{ trip.busNumber }}</p>
+    <p><strong>Seats Available:</strong> {{ trip.availableSeats }} / {{ trip.totalSeats }}</p>
+    <p><strong>Price:</strong> {{ trip.price.toFixed(2) }} USD per person</p>
+  </div>
+
+  <div class="trip-actions">
+    <button class="book-button">Book This Trip</button>
+    <a class="back-link" routerLink="/trips">← Back to Trips</a>
+  </div>
+</div>
+
+<ng-template #noTrip>
+  <p>Trip not found or failed to load.</p>
+  <a routerLink="/trips">← Back to Trips</a>
+</ng-template>

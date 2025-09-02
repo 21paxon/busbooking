@@ -70,27 +70,33 @@ public class TripService {
 
     // ✅ Search trips with multiple criteria
     public List<Trip> searchTrips(String origin, String destination, String date) {
-        if (origin != null && destination != null && date != null) {
-            // Search by all three criteria
-            LocalDateTime searchDate = LocalDateTime.parse(date + "T00:00:00");
-            return tripRepository.findByOriginContainingIgnoreCaseAndDestinationContainingIgnoreCaseAndDepartureTimeBetween(
-                origin, destination, searchDate, searchDate.plusDays(1));
-        } else if (origin != null && destination != null) {
-            // Search by origin and destination
-            return getTripsByRoute(origin, destination);
-        } else if (origin != null) {
-            // Search by origin only
-            return getTripsByOrigin(origin);
-        } else if (destination != null) {
-            // Search by destination only
-            return getTripsByDestination(destination);
-        } else if (date != null) {
-            // Search by date only
-            LocalDateTime searchDate = LocalDateTime.parse(date + "T00:00:00");
-            return tripRepository.findByDepartureTimeBetween(searchDate, searchDate.plusDays(1));
-        } else {
-            // No criteria specified, return all trips
-            return getAllTrips();
+        try {
+            if (origin != null && destination != null && date != null) {
+                // Search by all three criteria
+                LocalDateTime searchDate = LocalDateTime.parse(date + "T00:00:00");
+                return tripRepository.findByOriginContainingIgnoreCaseAndDestinationContainingIgnoreCaseAndDepartureTimeBetween(
+                    origin, destination, searchDate, searchDate.plusDays(1));
+            } else if (origin != null && destination != null) {
+                // Search by origin and destination
+                return getTripsByRoute(origin, destination);
+            } else if (origin != null) {
+                // Search by origin only
+                return getTripsByOrigin(origin);
+            } else if (destination != null) {
+                // Search by destination only
+                return getTripsByDestination(destination);
+            } else if (date != null) {
+                // Search by date only
+                LocalDateTime searchDate = LocalDateTime.parse(date + "T00:00:00");
+                return tripRepository.findByDepartureTimeBetween(searchDate, searchDate.plusDays(1));
+            } else {
+                // No criteria specified, return all trips
+                return getAllTrips();
+            }
+        } catch (Exception e) {
+            // Log the error and return empty list for invalid date format
+            System.err.println("Error parsing date: " + date + ", Error: " + e.getMessage());
+            return List.of();
         }
     }
 

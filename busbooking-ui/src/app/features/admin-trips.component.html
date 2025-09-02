@@ -1,0 +1,99 @@
+<div class="admin-trips-container">
+  <div class="admin-header">
+    <div class="admin-info">
+      <h1>Admin Trip Management</h1>
+      <p>Welcome back, {{ currentUser?.firstName }} {{ currentUser?.lastName }} ({{ currentUser?.email }})</p>
+    </div>
+    <div class="admin-actions">
+      <button type="button" class="refresh-btn" (click)="refreshTrips()" [disabled]="loading">
+        <span class="refresh-icon">↻</span>
+        Refresh
+      </button>
+      <button type="button" class="logout-btn" (click)="logout()">
+        <span class="logout-icon">🚪</span>
+        Logout
+      </button>
+    </div>
+  </div>
+  
+  <!-- Error Display -->
+  <div *ngIf="error" class="error">
+    <span>{{ error }}</span>
+    <button type="button" class="error-close" (click)="clearError()">×</button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <span class="loading-spinner"></span>
+    Loading trips from database...
+  </div>
+
+  <!-- Trips Table -->
+  <div *ngIf="!loading && trips.length > 0">
+    <div class="table-header">
+      <h2>Total Trips: {{ trips.length }}</h2>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Route</th>
+          <th>Departure</th>
+          <th>Arrival</th>
+          <th>Price</th>
+          <th>Seats</th>
+          <th>Bus</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let trip of trips">
+          <td>
+            <div class="route-info">
+              <div class="origin">{{ trip.origin }}</div>
+              <div class="arrow">→</div>
+              <div class="destination">{{ trip.destination }}</div>
+            </div>
+          </td>
+          <td>
+            <div class="time-info">
+              <div class="date">{{ trip.departureTime | date:'MMM dd' }}</div>
+              <div class="time">{{ trip.departureTime | date:'HH:mm' }}</div>
+            </div>
+          </td>
+          <td>
+            <div class="time-info">
+              <div class="date">{{ trip.arrivalTime | date:'MMM dd' }}</div>
+              <div class="time">{{ trip.arrivalTime | date:'HH:mm' }}</div>
+            </div>
+          </td>
+          <td class="price">${{ trip.price }}</td>
+          <td>
+            <div class="seats-info">
+              <span class="available">{{ trip.availableSeats }}</span>
+              <span class="separator">/</span>
+              <span class="total">{{ trip.totalSeats }}</span>
+            </div>
+          </td>
+          <td class="bus-number">{{ trip.busNumber }}</td>
+          <td>
+            <button type="button" class="delete-btn" (click)="deleteTrip(trip.tripId)" [disabled]="loading">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && trips.length === 0" class="empty-state">
+    <div class="empty-icon">🚌</div>
+    <h3>No trips found</h3>
+    <p>There are no trips in the database yet.</p>
+    <button type="button" class="refresh-btn" (click)="refreshTrips()">
+      <span class="refresh-icon">↻</span>
+      Refresh
+    </button>
+  </div>
+</div>

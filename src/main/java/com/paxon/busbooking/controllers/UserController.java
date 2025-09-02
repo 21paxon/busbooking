@@ -1,6 +1,7 @@
 package com.paxon.busbooking.controllers;
 
-import com.paxon.busbooking.services.UserService;
+import com.paxon.busbooking.services
+        .UserService;
 import com.paxon.busbooking.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

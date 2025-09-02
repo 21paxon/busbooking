@@ -8,8 +8,12 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(generator = "UUID")
+    @org.hibernate.annotations.GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     private UUID userId;
 
     private String email;

@@ -1,0 +1,129 @@
+<div class="trips-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Find Your Perfect Journey</h1>
+      <p class="hero-subtitle">
+        Discover comfortable and reliable bus routes across the country
+      </p>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="search-section">
+    <div class="search-container">
+      <div class="search-row">
+        <div class="search-field">
+          <label for="origin">From</label>
+          <input
+            type="text"
+            id="origin"
+            [(ngModel)]="searchOrigin"
+            placeholder="Enter departure city"
+            class="search-input"
+          />
+        </div>
+        <div class="search-field">
+          <label for="destination">To</label>
+          <input
+            type="text"
+            id="destination"
+            [(ngModel)]="searchDestination"
+            placeholder="Enter destination city"
+            class="search-input"
+          />
+        </div>
+        <div class="search-field">
+          <label for="date">Date</label>
+          <input
+            type="date"
+            id="date"
+            [(ngModel)]="searchDate"
+            class="search-input"
+          />
+        </div>
+        <button class="search-button" (click)="searchTrips()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-section">
+    <div class="results-header">
+      <h2 class="results-title">Available Trips</h2>
+      <div class="results-count" *ngIf="!loading && trips.length">
+        {{ trips.length }} trip{{ trips.length !== 1 ? 's' : '' }} found
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Searching for the best routes...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error && !loading">
+      <h3 class="error-title">Oops! Something went wrong</h3>
+      <p class="error-message">{{ error }}</p>
+      <button class="retry-button" (click)="loadTrips()">Try Again</button>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="!loading && !error && trips.length === 0">
+      <h3 class="no-results-title">No trips found</h3>
+      <p class="no-results-message">
+        Try adjusting your search criteria or check back later for new routes.
+      </p>
+    </div>
+
+    <!-- Trips Grid -->
+    <div class="trips-grid" *ngIf="!loading && !error && trips.length > 0">
+      <div class="trip-card" *ngFor="let trip of trips">
+        <div class="trip-header">
+          <div class="route-info">
+            <div class="route-cities">
+              <span class="city origin">{{ trip.origin }}</span>
+              →
+              <span class="city destination">{{ trip.destination }}</span>
+            </div>
+            <div class="route-duration">
+              {{ getDuration(trip.departureTime, trip.arrivalTime) }}
+            </div>
+          </div>
+          <div class="trip-price">
+            <span class="price-amount">
+              {{ '$' + trip.price.toFixed(2) }}
+            </span>
+            <span class="price-label">per person</span>
+          </div>
+        </div>
+
+        <div class="trip-details">
+          <div class="time-info">
+            <div class="departure">
+              <span class="time-label">Departure</span>
+              <span class="time-value">{{ formatTime(trip.departureTime) }}</span>
+            </div>
+            <div class="arrival">
+              <span class="time-label">Arrival</span>
+              <span class="time-value">{{ formatTime(trip.arrivalTime) }}</span>
+            </div>
+          </div>
+          <div class="trip-features">
+            <span class="feature">{{ trip.availableSeats }} seats available</span>
+            <span class="feature">Bus {{ trip.busNumber }}</span>
+            <span class="feature">{{ formatDate(trip.departureTime) }}</span>
+          </div>
+        </div>
+
+        <div class="trip-actions">
+          <button class="book-button" (click)="bookTrip(trip)">Book Now</button>
+          <a class="details-button" [routerLink]="['/trips', trip.tripId]">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

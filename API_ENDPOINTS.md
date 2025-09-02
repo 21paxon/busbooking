@@ -396,3 +396,11 @@ curl -X POST http://localhost:8080/api/bookings \
 2. Set base URL to `http://localhost:8080`
 3. Test each endpoint with appropriate parameters
 4. Verify responses and error handling
+
+
+
+
+
+
+
+

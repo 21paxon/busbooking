@@ -151,11 +151,11 @@ export class BookingsComponent implements OnInit {
     this.loading = true;
     this.error = '';
     
-    // For demo purposes, we'll use a mock user ID
-    // In a real app, this would come from authentication
-    const mockUserId = 'user123';
-    
-    this.bookingService.byUser(mockUserId).subscribe({
+    // Use seeded demo USER UUID from backend import.sql
+    const userId = '550e8400-e29b-41d4-a716-446655440011';
+    const requestingUserId = userId;
+
+    this.bookingService.byUser(userId, requestingUserId).subscribe({
       next: (data) => { 
         this.bookings = data; 
         this.loading = false; 

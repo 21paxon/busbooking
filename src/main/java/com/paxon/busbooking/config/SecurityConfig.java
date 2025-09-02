@@ -13,13 +13,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF so Postman/clients without tokens can call APIs
+                // Disable CSRF for APIs
                 .csrf(csrf -> csrf.disable())
 
-                // Allow all requests (no authentication required)
+                // Configure endpoint security
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                );
+                        .requestMatchers("/api/auth/**").permitAll() // ✅ Allow login/register
+                        .anyRequest().authenticated()               // ✅ Protect everything else
+                )
+
+                // Allow testing with Postman/Angular easily
+                .httpBasic(httpBasic -> {}) // enables basic auth (optional for now)
+                .formLogin(form -> form.disable()); // disable default login form
 
         return http.build();
     }

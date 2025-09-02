@@ -1,0 +1,80 @@
+<div class="admin-login-container">
+  <div class="admin-login-card">
+    <div class="admin-login-header">
+      <div class="admin-icon">👑</div>
+      <h1>Admin Login</h1>
+      <p>Access the bus booking administration panel</p>
+    </div>
+
+    <!-- Error Display -->
+    <div *ngIf="error" class="error-message">
+      <span class="error-icon">⚠️</span>
+      {{ error }}
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onAdminLogin()" class="admin-login-form">
+      <div class="form-group">
+        <label for="email">Admin Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="loginData.email"
+          placeholder="admin@busbooking.com"
+          required
+          [disabled]="loading"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Admin Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="loginData.password"
+          placeholder="Enter admin password"
+          required
+          [disabled]="loading"
+        />
+      </div>
+
+      <button 
+        type="submit" 
+        class="admin-login-btn"
+        [disabled]="loading"
+      >
+        <span *ngIf="loading" class="loading-spinner"></span>
+        {{ loading ? 'Signing In...' : 'Sign In as Admin' }}
+      </button>
+    </form>
+
+    <!-- Navigation Links -->
+    <div class="admin-login-footer">
+      <p>Need a different account?</p>
+      <div class="footer-links">
+        <button type="button" class="link-btn" (click)="goToUserLogin()">
+          User Login
+        </button>
+        <span class="separator">|</span>
+        <button type="button" class="link-btn" (click)="goToUserRegister()">
+          User Registration
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Info -->
+    <div class="admin-info">
+      <h3>Demo Admin Account</h3>
+      <div class="demo-credentials">
+        <div class="credential">
+          <strong>Email:</strong> admin&#64;busbooking.com
+        </div>
+        <div class="credential">
+          <strong>Password:</strong> admin
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+.trip-details-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.trip-info p {
+  margin: 0.5rem 0;
+}
+.book-button {
+  background: #007bff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.back-link {
+  margin-left: 1rem;
+  color: #333;
+  text-decoration: none;
+}

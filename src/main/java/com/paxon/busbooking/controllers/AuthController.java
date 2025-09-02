@@ -19,10 +19,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest request) {
         AuthResponse response = userService.registerUser(request);
-        
+
         if (response.getMessage().contains("successfully")) {
-            return ResponseEntity.ok(response);
+            // ✅ 201 Created for successful registration
+            return ResponseEntity.status(201).body(response);
         } else {
+            // ✅ 400 Bad Request for invalid registration
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -30,11 +32,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequest request) {
         AuthResponse response = userService.loginUser(request);
-        
+
         if (response.getMessage().contains("successful")) {
+            // ✅ 200 OK if login succeeds
             return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.badRequest().body(response);
+            // ✅ 401 Unauthorized for invalid credentials
+            return ResponseEntity.status(401).body(response);
         }
     }
 }

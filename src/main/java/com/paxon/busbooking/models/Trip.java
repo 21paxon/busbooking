@@ -21,7 +21,7 @@ public class Trip {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "trip_id", updatable = false, nullable = false)
+    @Column(name = "trip_id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
     private UUID tripId;
 
     private String origin;
